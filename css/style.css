@@ -12,9 +12,6 @@
 *::before,
 *::after {
     box-sizing: border-box;
-    list-style: none;
-    font-family: "Montserrat", sans-serif;
-    border: none;
     margin: 0;
     padding: 0;
 }
@@ -23,6 +20,9 @@ html,
 body {
     height: 100%;
     background-color: var(--dark-gray);
+    list-style: none;
+    font-family: "Montserrat", sans-serif;
+    border: none;
 }
 
 body {
@@ -39,7 +39,7 @@ button:hover {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .yellow {
@@ -48,6 +48,22 @@ button:hover {
 
 .turquoise {
     color: var(--turquoise);
+}
+
+.light-gray {
+    color: var(--light-gray);
+}
+
+.yellow-bg {
+    background-color: var(--yellow);
+}
+
+.turquoise-bg {
+    background-color: var(--turquoise);
+}
+
+.light-gray-bg {
+    background-color: var(--light-gray);
 }
 
 .shadow {
@@ -89,11 +105,35 @@ button:hover {
 }
 
 .square {
-    background-color: red;
+    background-color: var(--gray);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+}
+
+.square:hover {
+    cursor: pointer;
+    opacity: 0.9;
 }
 
 .score {
-    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.score p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.score span {
+    font-size: 12px;
+    margin-top: 2px;
 }
 
 .menu {
@@ -148,6 +188,38 @@ footer {
 footer a {
     color: var(--turquoise);
     text-decoration: none;
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-contents {
+    height: 150px;
+    width: 100%;
+    max-width: 300px;
+    background: #2a4544;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: white;
+    margin: 10px;
+}
+
+.modal-contents button {
+    padding: 10px;
+    background: var(--turquoise);
+    color: #2a4544;
+    border-radius: 3px;
 }
 
 @keyframes turn-text-animation {
