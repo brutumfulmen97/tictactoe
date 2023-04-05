@@ -14,9 +14,9 @@
     <body>
         <main>
             <div class="grid">
-                <div class="turn">
+                <div class="turn" data-id="turn">
                     <i class="fa-solid fa-x turquoise"></i>
-                    <p>Player 1, you're up!</p>
+                    <p class="turquoise">Player 1, you're up!</p>
                 </div>
 
                 <div class="menu" data-id="menu">
@@ -61,10 +61,10 @@
             <a href="#">@brutum</a>
         </footer>
 
-        <div class="modal hidden">
-            <div class="modal-contents">
-                <p>Player 1 wins!</p>
-                <button>Play again</button>
+        <div class="modal hidden" data-id="modal">
+            <div class="modal-contents" data-id="modal-contents">
+                <p data-id="modal-text">Player 1 wins!</p>
+                <button data-id="modal-button">Play again</button>
             </div>
         </div>
 

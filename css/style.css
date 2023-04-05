@@ -43,11 +43,11 @@ button:hover {
 }
 
 .yellow {
-    color: var(--yellow);
+    color: var(--yellow) !important;
 }
 
 .turquoise {
-    color: var(--turquoise);
+    color: var(--turquoise) !important;
 }
 
 .light-gray {
