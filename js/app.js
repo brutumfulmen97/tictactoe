@@ -56,9 +56,9 @@ const App = {
         App.registerEventListeners();
     },
     registerEventListeners() {
-        App.$.menu.addEventListener("click", () => {
-            App.$.menuItems.classList.toggle("hidden");
-        });
+        // App.$.menu.addEventListener("click", () => {
+        //     App.$.menuItems.classList.toggle("hidden");
+        // });
 
         App.$.resetBtn.addEventListener("click", () => {
             console.log("reset");
@@ -149,4 +149,26 @@ const App = {
     },
 };
 
-window.addEventListener("load", App.init);
+// window.addEventListener("load", App.init);
+
+import View from "./view.js";
+
+function init() {
+    const view = new View();
+    console.log(view.$.turn);
+
+    view.bindGameResetEvent((e) => {
+        console.log(e);
+    });
+
+    view.bindNewRoundEvent((e) => {
+        console.log(e);
+    });
+
+    view.bindPlayerMoveEvent((e) => {
+        view.setTurnIndicator(1);
+        view.handlePlayerMove(e.target, 1);
+    });
+}
+
+window.addEventListener("load", init);
