@@ -152,10 +152,27 @@ const App = {
 // window.addEventListener("load", App.init);
 
 import View from "./view.js";
+import Store from "./store.js";
+
+const players = [
+    {
+        id: 1,
+        name: "Player 1",
+        iconClass: "fa-x",
+        colorClass: "turquoise",
+    },
+    {
+        id: 2,
+        name: "Player 2",
+        iconClass: "fa-o",
+        colorClass: "yellow",
+    },
+];
 
 function init() {
     const view = new View();
-    console.log(view.$.turn);
+    const store = new Store(players);
+    console.log(store.game);
 
     view.bindGameResetEvent((e) => {
         console.log(e);
@@ -165,9 +182,15 @@ function init() {
         console.log(e);
     });
 
-    view.bindPlayerMoveEvent((e) => {
-        view.setTurnIndicator(1);
-        view.handlePlayerMove(e.target, 1);
+    view.bindPlayerMoveEvent((square) => {
+        const existingMove = store.game.moves.find(
+            (move) => move.squareId === +square.id
+        );
+        if (existingMove !== undefined) return;
+
+        view.handlePlayerMove(square, store.game.currentPlayer);
+        store.playerMove(+square.id);
+        view.setTurnIndicator(store.game.currentPlayer);
     });
 }
 
