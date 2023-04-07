@@ -1,35 +1,115 @@
-const initialValue = { moves: [] };
+const initialValue = {
+    currentGameMoves: [],
+    history: {
+        currentRoundGames: [],
+        allGames: [],
+    },
+};
 
 export default class Store {
-    #state = initialValue;
-
-    constructor(players) {
+    constructor(key, players) {
         this.players = players;
+        this.storageKey = key;
+    }
+
+    get stats() {
+        const state = this.#getState();
+        return {
+            playerWithStats: this.players.map((player) => {
+                const wins = state.history.currentRoundGames.filter((game) => {
+                    return game.status.winner?.id === player.id;
+                }).length;
+                return { ...player, wins };
+            }),
+            ties: state.history.currentRoundGames.filter(
+                (game) => game.status.winner === null
+            ).length,
+        };
     }
 
     get game() {
         const state = this.#getState();
 
-        const currentPlayer = this.players[state.moves.length % 2];
+        const currentPlayer = this.players[state.currentGameMoves.length % 2];
+
+        const winningPatterns = [
+            [1, 2, 3],
+            [1, 4, 7],
+            [1, 5, 9],
+            [2, 5, 8],
+            [3, 5, 7],
+            [3, 6, 9],
+            [4, 5, 6],
+            [7, 8, 9],
+        ];
+
+        let winner = null;
+
+        for (const player of this.players) {
+            const selectedSqaureIds = state.currentGameMoves
+                .filter((move) => move.player.id === player.id)
+                .map((move) => move.squareId);
+
+            for (const pattern of winningPatterns) {
+                if (pattern.every((v) => selectedSqaureIds.includes(v))) {
+                    winner = player;
+                }
+            }
+        }
 
         return {
-            moves: state.moves,
+            moves: state.currentGameMoves,
             currentPlayer,
+            status: {
+                isComplete:
+                    winner != null || state.currentGameMoves.length === 9,
+                winner,
+            },
         };
     }
 
     playerMove(squareId) {
-        const state = this.#getState();
+        const stateClone = structuredClone(this.#getState());
 
-        const stateClone = structuredClone(state);
+        stateClone.currentGameMoves.push({
+            squareId,
+            player: this.game.currentPlayer,
+        });
 
-        stateClone.moves.push({ squareId, player: this.game.currentPlayer });
+        this.#saveState(stateClone);
+    }
+
+    reset() {
+        const stateClone = structuredClone(this.#getState());
+
+        const { status, moves } = this.game;
+        if (status.isComplete) {
+            stateClone.history.currentRoundGames.push({
+                moves,
+                status,
+            });
+        }
+
+        stateClone.currentGameMoves = [];
+        this.#saveState(stateClone);
+    }
+
+    newRound() {
+        this.reset();
+
+        const stateClone = structuredClone(this.#getState());
+        stateClone.history.allGames.push(
+            ...stateClone.history.currentRoundGames
+        );
+        stateClone.history.currentRoundGames = [];
 
         this.#saveState(stateClone);
     }
 
     #getState() {
-        return this.#state;
+        return (
+            JSON.parse(localStorage.getItem(this.storageKey)) ?? initialValue
+        );
     }
 
     #saveState(stateOrFn) {
@@ -46,6 +126,6 @@ export default class Store {
                 throw new Error("Invalid state");
         }
 
-        this.#state = newState;
+        window.localStorage.setItem(this.storageKey, JSON.stringify(newState));
     }
 }

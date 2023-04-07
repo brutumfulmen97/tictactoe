@@ -12,6 +12,9 @@ export default class View {
         this.$.modalBtn = this.#qs('[data-id="modal-button"]');
         this.$.modalText = this.#qs('[data-id="modal-text"]');
         this.$.turn = this.#qs('[data-id="turn"]');
+        this.$.p1Wins = this.#qs('[data-id="p1-wins"]');
+        this.$.p2Wins = this.#qs('[data-id="p2-wins"]');
+        this.$.ties = this.#qs('[data-id="ties"]');
 
         this.$$.squares = this.#qsa('[data-id="square"]');
 
@@ -28,6 +31,7 @@ export default class View {
 
     bindGameResetEvent(handler) {
         this.$.resetBtn.addEventListener("click", handler);
+        this.$.modalBtn.addEventListener("click", handler);
     }
 
     bindNewRoundEvent(handler) {
@@ -45,6 +49,32 @@ export default class View {
      * DOM helper methods
      */
 
+    updateScoreboard(p1Wins, p2Wins, ties) {
+        this.$.p1Wins.innerText = `${p1Wins} Wins`;
+        this.$.p2Wins.innerText = `${p2Wins} Wins`;
+        this.$.ties.innerText = `${ties}`;
+    }
+
+    openModal(message) {
+        this.$.modalText.innerText = message;
+        this.$.modal.classList.remove("hidden");
+    }
+
+    clearMoves() {
+        this.$$.squares.forEach((square) => {
+            square.innerHTML = "";
+        });
+    }
+
+    #closeModal() {
+        this.$.modal.classList.add("hidden");
+    }
+
+    closeAll() {
+        this.#closeModal();
+        this.#closeMenu();
+    }
+
     #toggleMenu() {
         this.$.menuItems.classList.toggle("hidden");
         this.$.menuBtn.classList.toggle("border");
@@ -53,6 +83,16 @@ export default class View {
         const icon = this.#qs("i", this.menuBtn);
         icon.classList.toggle("fa-chevron-down");
         icon.classList.toggle("fa-chevron-up");
+    }
+
+    #closeMenu() {
+        this.$.menuItems.classList.add("hidden");
+        this.$.menuBtn.classList.remove("border");
+
+        //flip icon
+        const icon = this.#qs("i", this.menuBtn);
+        icon.classList.add("fa-chevron-down");
+        icon.classList.remove("fa-chevron-up");
     }
 
     setTurnIndicator(player) {
@@ -70,6 +110,16 @@ export default class View {
         const icon = document.createElement("i");
         icon.classList.add("fa-solid", player.iconClass, player.colorClass);
         squareEl.replaceChildren(icon);
+    }
+
+    initializeMoves(moves) {
+        this.$$.squares.forEach((square) => {
+            const existingMove = moves.find(
+                (move) => move.squareId === +square.id
+            );
+            if (existingMove)
+                this.handlePlayerMove(square, existingMove.player);
+        });
     }
 
     #qs(selector, parent) {
