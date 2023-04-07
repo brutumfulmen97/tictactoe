@@ -173,32 +173,34 @@ function init() {
     const view = new View();
     const store = new Store("iks-oks", players);
 
-    function initView() {
-        view.closeAll();
-        view.clearMoves();
-        view.setTurnIndicator(store.game.currentPlayer);
-        view.updateScoreboard(
-            store.stats.playerWithStats[0].wins,
-            store.stats.playerWithStats[1].wins,
-            store.stats.ties
-        );
-        view.initializeMoves(store.game.moves);
-    }
-
-    window.addEventListener("storage", () => {
-        initView();
+    store.addEventListener("statechange", () => {
+        view.render(store.game, store.stats);
     });
 
-    initView();
+    // function initView() {
+    //     view.closeAll();
+    //     view.clearMoves();
+    //     view.setTurnIndicator(store.game.currentPlayer);
+    //     view.updateScoreboard(
+    //         store.stats.playerWithStats[0].wins,
+    //         store.stats.playerWithStats[1].wins,
+    //         store.stats.ties
+    //     );
+    //     view.initializeMoves(store.game.moves);
+    // }
+
+    window.addEventListener("storage", () => {
+        view.render(store.game, store.stats);
+    });
+
+    view.render(store.game, store.stats);
 
     view.bindGameResetEvent((e) => {
         store.reset();
-        initView();
     });
 
     view.bindNewRoundEvent((e) => {
         store.newRound();
-        initView();
     });
 
     view.bindPlayerMoveEvent((square) => {
@@ -207,19 +209,7 @@ function init() {
         );
         if (existingMove !== undefined) return;
 
-        view.handlePlayerMove(square, store.game.currentPlayer);
         store.playerMove(+square.id);
-
-        if (store.game.status.isComplete) {
-            view.openModal(
-                store.game.status.winner
-                    ? `${store.game.status.winner.name} wins!`
-                    : "Draw"
-            );
-            return;
-        }
-
-        view.setTurnIndicator(store.game.currentPlayer);
     });
 }
 
