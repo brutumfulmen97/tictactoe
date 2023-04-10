@@ -1,29 +1,29 @@
 export type Player = {
-    id: number,
-    name: string,
-    iconClass: string,
-    colorClass: string,
-}
+    id: number;
+    name: string;
+    iconClass: string;
+    colorClass: string;
+};
 
 export type Move = {
-    squareId: number,
-    player: Player,
-}
+    squareId: number;
+    player: Player;
+};
 
 export type Game = {
-    moves: Move[],
-    status: GameStatus
-}
+    moves: Move[];
+    status: GameStatus;
+};
 
 export type GameStatus = {
-    isComplete: boolean,
-    winner: Player,
-}
+    isComplete: boolean;
+    winner: Player | null;
+};
 
 export type GameState = {
-    currentGameMoves: Move[],
+    currentGameMoves: Move[];
     history: {
-        currentRoundGames: Game[],
-        allGames: Game[],
-    },
-}
+        currentRoundGames: Game[];
+        allGames: Game[];
+    };
+};

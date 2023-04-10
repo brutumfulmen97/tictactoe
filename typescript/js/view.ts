@@ -1,5 +1,5 @@
 import { Game, GameStatus, Move, Player } from "./types";
-import type Store from "./store";
+import type { DerievedStats, DerievedGame } from "./store";
 
 export default class View {
     $: Record<string, Element> = {};
@@ -46,7 +46,7 @@ export default class View {
         this.#delegate(this.$.grid, '[data-id="square"]', "click", handler);
     }
 
-    render(game: Store["game"], stats: Store["stats"]) {
+    render(game: DerievedGame, stats: DerievedStats) {
         this.#updateScoreboard(
             stats.playerWithStats[0].wins,
             stats.playerWithStats[1].wins,
