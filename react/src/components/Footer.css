@@ -1,0 +1,11 @@
+footer {
+    display: flex;
+    gap: 5px;
+    color: white;
+    margin-top: 50px;
+}
+
+footer a {
+    color: var(--turquoise);
+    text-decoration: none;
+}
